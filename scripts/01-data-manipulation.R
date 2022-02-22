@@ -88,3 +88,20 @@ surveys_year <- surveys %>%
 surveys_year_wide <- surveys_year %>%
   tidyr:: pivot_wider(names_from = year, 
                      values_from = genera_count)
+
+## Exporting filtered data
+# Goal: data set to plot change in species abundance over time 
+surveys_complete <- surveys %>% 
+  filter(!is.na(weight), 
+         !is.na(hindfoot_length), 
+         !is.na(sex))
+
+#most common species
+species_counts <- surveys_complete %>% 
+  count(species_id) %>% ##makes a column "n"
+  filter(n > 50) ## gives you only counts of species > 50
+
+# Only keep the most common species
+surveys_complete <- surveys_complete %>% 
+  filter(species_id %in% species_counts$species_id)
+
